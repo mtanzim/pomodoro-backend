@@ -31,11 +31,8 @@ createConnection(options)
     });
     app.post("/api/tasks/", async function(req, res, next) {
       let newTask = new Task();
-      const { userId, name, category, duration }: ITaskBody = req.body;
-      newTask.userId = userId;
-      newTask.name = name;
-      newTask.category = category;
-      newTask.duration = duration;
+      const { ...taskFields }: ITaskBody = req.body;
+      Object.assign(newTask, taskFields);
       try {
         await connection.manager.save(newTask);
       } catch (err) {
