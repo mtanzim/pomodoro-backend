@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn, Check } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn, Check, CreateDateColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
 // sqlite requires explicit check!
@@ -19,4 +19,11 @@ export class Task {
 
   @Column("int")
   duration: number;
+
+  @CreateDateColumn()
+  created: Date;
+
+  @UpdateDateColumn()
+  updated: Date;
+
 }
