@@ -1,9 +1,11 @@
 import bodyParser from "body-parser";
-import express from "express";
+import express, {ErrorRequestHandler} from "express";
 import * as path from "path";
 import "reflect-metadata";
 import { ConnectionOptions, createConnection } from "typeorm";
 import { Task } from "./entity/Task";
+import taskRouter from "./router/tasks";
+
 
 const root: string = path.resolve(__dirname, "..");
 const app = express();
@@ -17,38 +19,18 @@ const options: ConnectionOptions = {
   synchronize: true
 };
 
-interface ITaskBody {
-  userId: number;
-  name: string;
-  category: string;
-  duration: number;
+const handleError:ErrorRequestHandler = (err, _req,res, _next) => {
+  // console.log(err);
+  return res.status(500).send(err.message);
 }
 
 createConnection(options)
-  .then(async connection => {
-    app.get("/", function(_req, res) {
-      res.send("Hello World again!");
+  .then(async _connection => {
+    app.get("/health-check", function(_req, res) {
+      res.send("Hello World!");
     });
-    app.post("/api/tasks/", async function(req, res, next) {
-      let newTask = new Task();
-      const { ...taskFields }: ITaskBody = req.body;
-      Object.assign(newTask, taskFields);
-      try {
-        await connection.manager.save(newTask);
-      } catch (err) {
-        return next(err);
-      }
-      res.send("saved new task");
-    });
-    app.get("/api/tasks/", async function(_req, res, next) {
-      try {
-        let savedPhotos = await connection.manager.find(Task);
-        res.send(savedPhotos);
-      } catch (err) {
-        return next(err);
-      }
-    });
-
+    app.use("/api/tasks", taskRouter);
+    app.use(handleError);
     app.listen(3000, function() {
       console.log("Example app listening on port 3000!");
     });
