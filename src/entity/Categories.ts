@@ -14,16 +14,4 @@ export class Task {
   @Column("varchar", { length: 50 })
   name: string;
 
-  @Column("int")
-  category_id: Number;
-
-  @Column("int")
-  duration: number;
-
-  @CreateDateColumn()
-  created: Date;
-
-  @UpdateDateColumn()
-  updated: Date;
-
 }

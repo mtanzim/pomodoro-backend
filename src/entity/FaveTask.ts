@@ -3,7 +3,7 @@ import { Column, Entity, PrimaryGeneratedColumn, Check, CreateDateColumn, Update
 @Entity()
 // sqlite requires explicit check!
 @Check(`typeof(duration) = "integer"`)
-export class Task {
+export class FaveTask {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -16,9 +16,6 @@ export class Task {
 
   @Column("int")
   category_id: Number;
-
-  @Column("int")
-  duration: number;
 
   @CreateDateColumn()
   created: Date;
