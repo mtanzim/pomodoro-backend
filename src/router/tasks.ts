@@ -7,13 +7,13 @@ const router = express.Router();
 interface ITaskBody {
   userId: number;
   name: string;
-  category: string;
+  categoryId: number;
   duration: number;
 }
 interface ITaskBodyPatch {
   userId?: number;
   name?: string;
-  category?: string;
+  categoryId?: number;
   duration?: number;
 }
 

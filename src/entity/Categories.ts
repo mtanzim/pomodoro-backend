@@ -1,9 +1,16 @@
-import { Column, Entity, PrimaryGeneratedColumn, Check, CreateDateColumn, UpdateDateColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  Unique
+} from "typeorm";
+import { AbstractTimetamp } from "./AbstractTimestamp";
 
 @Entity()
-// sqlite requires explicit check!
-@Check(`typeof(duration) = "integer"`)
-export class Task {
+@Unique(["userId", "name"])
+export class Categories extends AbstractTimetamp {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -14,4 +21,9 @@ export class Task {
   @Column("varchar", { length: 50 })
   name: string;
 
+  @CreateDateColumn()
+  created: Date;
+
+  @UpdateDateColumn()
+  updated: Date;
 }

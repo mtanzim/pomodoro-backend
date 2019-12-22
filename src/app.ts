@@ -14,7 +14,7 @@ app.use(bodyParser.json());
 const options: ConnectionOptions = {
   type: "sqlite",
   database: `${root}/data/pomodoro.sqlite`,
-  entities: [Task],
+  entities: ["src/entity/**/*.ts"],
   logging: true,
   synchronize: true
 };
