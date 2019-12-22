@@ -1,6 +1,7 @@
 import express from "express";
 import { getRepository } from "typeorm";
 import { Task } from "../entity/Task";
+import { TaskController } from "../controller/AbstractTask";
 
 const router = express.Router();
 
@@ -17,23 +18,21 @@ interface ITaskBodyPatch {
   duration?: number;
 }
 
+const taskController = new TaskController(Task);
+
 router
   .post("/", async function(req, res, next) {
-    const taskRepo = getRepository(Task);
-    let newTask = new Task();
     const { ...taskFields }: ITaskBody = req.body;
-    Object.assign(newTask, taskFields);
     try {
-      await taskRepo.save(newTask);
+      const newTask = await taskController.create(taskFields);
+      return res.json(newTask);
     } catch (err) {
       return next(err);
     }
-    return res.json(newTask);
   })
   .get("/", async function(_req, res, next) {
-    const taskRepo = getRepository(Task);
     try {
-      let allTasks = await taskRepo.find();
+      let allTasks =  await taskController.getAll();
       return res.json(allTasks);
     } catch (err) {
       return next(err);
