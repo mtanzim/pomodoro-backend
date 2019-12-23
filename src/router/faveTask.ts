@@ -1,5 +1,5 @@
 import express from "express";
-import { Task } from "../entity/Task";
+import { FaveTask } from "../entity/FaveTask";
 import { GenericController } from "../controller/GenericController";
 
 const router = express.Router();
@@ -8,16 +8,14 @@ export interface ITaskBody {
   userId: number;
   name: string;
   categoryId: number;
-  duration: number;
 }
 interface ITaskBodyPatch {
   name?: string;
   categoryId?: number;
-  duration?: number;
 }
 
-const taskController = new GenericController<Task, ITaskBody, ITaskBodyPatch>(
-  Task
+const taskController = new GenericController<FaveTask, ITaskBody, ITaskBodyPatch>(
+  FaveTask
 );
 
 router

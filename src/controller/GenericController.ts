@@ -15,28 +15,32 @@ export class GenericController<Model, PostI, PatchI> {
     await repo.save(newItem);
     return newItem;
   }
-  async getAll(): Promise<Model[]> {
+  async getAll(userId: number | string): Promise<Model[]> {
     const repo = getRepository(this._model);
-    let items = await repo.find();
+    let items = await repo.find({ where: { userId } });
     return items;
   }
-  async get(id: number | string): Promise<Model> {
+  async get(userId: number | string, id: number | string): Promise<Model> {
     const repo = getRepository(this._model);
-    let item = await repo.findOne(id);
+    let item = await repo.findOne({ where: { id, userId } });
     if (item === undefined) {
       throw new Error("Item not found");
     }
     return item;
   }
-  async delete(id: number | string): Promise<void> {
+  async delete(userId: number | string, id: number | string): Promise<void> {
     const repo = getRepository(this._model);
-    const item = await this.get(id);
+    const item = await this.get(userId, id);
     await repo.remove(item);
     return;
   }
-  async update(id: number | string, fields: PatchI): Promise<Model> {
+  async update(
+    userId: number | string,
+    id: number | string,
+    fields: PatchI
+  ): Promise<Model> {
     const repo = getRepository(this._model);
-    const item = await this.get(id);
+    const item = await this.get(userId, id);
     Object.assign(item, fields);
     await repo.save(item);
     return item;

@@ -3,8 +3,8 @@ import express, {ErrorRequestHandler} from "express";
 import * as path from "path";
 import "reflect-metadata";
 import { ConnectionOptions, createConnection } from "typeorm";
-import { Task } from "./entity/Task";
 import taskRouter from "./router/tasks";
+import faveTaskRouter from "./router/faveTask";
 
 
 const root: string = path.resolve(__dirname, "..");
@@ -30,6 +30,7 @@ createConnection(options)
       res.send("Hello World!");
     });
     app.use("/api/tasks", taskRouter);
+    app.use("/api/fave", faveTaskRouter);
     app.use(handleError);
     app.listen(3000, function() {
       console.log("Example app listening on port 3000!");
