@@ -6,6 +6,7 @@ import { ConnectionOptions, createConnection } from "typeorm";
 import taskRouter from "./router/tasks";
 import faveTaskRouter from "./router/faveTask";
 import catRouter from "./router/categories";
+import useRouter from "./router/users";
 
 
 const root: string = path.resolve(__dirname, "..");
@@ -33,6 +34,7 @@ createConnection(options)
     app.use("/api/tasks/", taskRouter);
     app.use("/api/fave/", faveTaskRouter);
     app.use("/api/cat/", catRouter);
+    app.use("/api/users/", useRouter);
     app.use(handleError);
     app.listen(3000, function() {
       console.log("Example app listening on port 3000!");

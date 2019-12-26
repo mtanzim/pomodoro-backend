@@ -1,19 +1,24 @@
 import { getRepository } from "typeorm";
 
 // https://stackoverflow.com/questions/41017287/cannot-use-new-with-expression-typescript
-interface Constructable<T> {
+export interface Constructable<T> {
   new (): T;
 }
 
-export class GenericController<Model, PostI, PatchI> {
+export interface WithId {
+  id: number;
+  userId: number;
+}
+
+export class GenericController<Model, PostI extends WithId, PatchI extends WithId> {
   constructor(private _model: Constructable<Model>) {}
 
   async create(fields: PostI): Promise<Model> {
     const repo = getRepository(this._model);
     let newItem: Model = new this._model();
     Object.assign(newItem, fields);
-    await repo.save(newItem);
-    return newItem;
+    const saved = await repo.save(newItem);
+    return saved;
   }
   async getAll(userId: number | string): Promise<Model[]> {
     const repo = getRepository(this._model);
@@ -43,6 +48,6 @@ export class GenericController<Model, PostI, PatchI> {
     const item = await this.get(userId, id);
     Object.assign(item, fields);
     await repo.save(item);
-    return item;
+    return this.get(userId, id);
   }
 }

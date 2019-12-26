@@ -1,8 +1,9 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn, Unique } from "typeorm";
 import { AbstractTimetamp } from "./AbstractTimestamp";
 
 @Entity()
-export abstract class User extends AbstractTimetamp {
+@Unique(["username"])
+export class User extends AbstractTimetamp {
   @PrimaryGeneratedColumn()
   id: number;
 
