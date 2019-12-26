@@ -6,7 +6,6 @@ import {
 } from "typeorm";
 
 @Entity()
-// sqlite requires explicit check!
 export abstract class AbstractTimetamp {
   @PrimaryGeneratedColumn()
   id: number;

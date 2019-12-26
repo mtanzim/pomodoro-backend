@@ -1,0 +1,10 @@
+{
+    "sqltools.connections": [
+        {
+            "database": "${workspaceFolder}/data/pomodoro.sqlite",
+            "dialect": "SQLite",
+            "name": "pomodoro"
+        }
+    ],
+    "sqltools.useNodeRuntime": true
+}
