@@ -10,8 +10,17 @@ const router = express.Router();
 router
   .get("/:userId", async function(req, res, next) {
     try {
-      let user = await controller.get(req.params.userId);
+      const user = await controller.get(req.params.userId);
       return res.json(user);
+    } catch (err) {
+      return next(err);
+    }
+  })
+  .post("/login", async function(req, res, next) {
+    const { username, password }: IUserBody = req.body;
+    try {
+      const loggedIn = await controller.login({ username, password });
+      return res.json(loggedIn);
     } catch (err) {
       return next(err);
     }
@@ -26,9 +35,20 @@ router
     }
   })
   .patch("/:userId", async function(req, res, next) {
-    const { password, verifyPassword, name, email, ...rest }: IUserBodyPatch = req.body;
+    const {
+      password,
+      verifyPassword,
+      name,
+      email,
+      ...rest
+    }: IUserBodyPatch = req.body;
     try {
-      const newUser = await controller.update(req.params.userId, { password, verifyPassword, name, email });
+      const newUser = await controller.update(req.params.userId, {
+        password,
+        verifyPassword,
+        name,
+        email
+      });
       return res.json(newUser);
     } catch (err) {
       return next(err);

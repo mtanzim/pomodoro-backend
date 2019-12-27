@@ -27,10 +27,7 @@ export class GenericController<Model, PostI extends WithId, PatchI extends WithI
   }
   async get(userId: number | string, id: number | string): Promise<Model> {
     const repo = getRepository(this._model);
-    let item = await repo.findOne({ where: { id, userId } });
-    if (item === undefined) {
-      throw new Error("Item not found");
-    }
+    let item = await repo.findOneOrFail({ where: { id, userId } });
     return item;
   }
   async delete(userId: number | string, id: number | string): Promise<void> {
@@ -47,7 +44,7 @@ export class GenericController<Model, PostI extends WithId, PatchI extends WithI
     const repo = getRepository(this._model);
     const item = await this.get(userId, id);
     Object.assign(item, fields);
-    await repo.save(item);
-    return this.get(userId, id);
+    const saved =  await repo.save(item);
+    return saved;
   }
 }

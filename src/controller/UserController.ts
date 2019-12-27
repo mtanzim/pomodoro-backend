@@ -26,8 +26,15 @@ export class UserController {
     if (password === undefined || verifyPassword === undefined)
       throw new Error("Provide password!");
     if (password !== verifyPassword) throw new Error("Passwords don't match");
-    const hashedPass = await bcrypt.hash(fields.password,8);
+    const hashedPass = await bcrypt.hash(fields.password, 8);
     return hashedPass;
+  }
+
+  async login({username,password}:{username:string, password:string}): Promise<boolean>{
+    const repo = getRepository(User);
+    const user = await repo.findOneOrFail({ where: { username } });
+    const loggedIn = await bcrypt.compare(password,user.password);
+    return loggedIn;
   }
 
   async create(fields: IUserBody): Promise<User> {
