@@ -1,5 +1,5 @@
 import bodyParser from "body-parser";
-import express, {ErrorRequestHandler} from "express";
+import express, { ErrorRequestHandler } from "express";
 import * as path from "path";
 import "reflect-metadata";
 import { ConnectionOptions, createConnection } from "typeorm";
@@ -8,6 +8,10 @@ import faveTaskRouter from "./router/faveTask";
 import catRouter from "./router/categories";
 import useRouter from "./router/users";
 
+import { User } from "./entity/User";
+import { Categories } from "./entity/Categories";
+import { Task } from "./entity/Task";
+import { FaveTask } from "./entity/FaveTask";
 
 const root: string = path.resolve(__dirname, "..");
 const app = express();
@@ -16,15 +20,15 @@ app.use(bodyParser.json());
 const options: ConnectionOptions = {
   type: "sqlite",
   database: `${root}/data/pomodoro.sqlite`,
-  entities: ["src/entity/**/*.ts"],
+  entities: [User, Categories, Task, FaveTask],
   logging: true,
   synchronize: true
 };
 
-const handleError:ErrorRequestHandler = (err, _req,res, _next) => {
+const handleError: ErrorRequestHandler = (err, _req, res, _next) => {
   console.log(err);
   return res.status(500).send(err.message);
-}
+};
 
 createConnection(options)
   .then(async _connection => {

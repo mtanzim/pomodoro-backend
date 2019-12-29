@@ -1,5 +1,14 @@
-import { Column, Entity, PrimaryGeneratedColumn, Unique } from "typeorm";
+import {
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  Unique,
+  OneToMany
+} from "typeorm";
 import { AbstractTimetamp } from "./AbstractTimestamp";
+import { Task } from "./Task";
+import { FaveTask } from "./FaveTask";
+import { Categories } from "./Categories";
 
 @Entity()
 @Unique(["username"])
@@ -18,4 +27,20 @@ export class User extends AbstractTimetamp {
 
   @Column("varchar", { length: 50000 })
   password: string;
+
+  @OneToMany(
+    type => Task,
+    task => task.user
+  )
+  tasks: Task[];
+  @OneToMany(
+    type => FaveTask,
+    faveTask => faveTask.user
+  )
+  faveTasks: FaveTask[];
+  @OneToMany(
+    type => Categories,
+    categories => categories.user
+  )
+  categories: Categories[];
 }

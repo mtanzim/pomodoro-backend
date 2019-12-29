@@ -1,5 +1,7 @@
-import { Column, Entity, PrimaryGeneratedColumn, Check } from "typeorm";
+import { Column, Entity, Check, ManyToOne } from "typeorm";
 import { AbstractTask } from "./AbstractTask";
+import { Categories } from "./Categories";
+import { User } from "./User";
 
 @Entity()
 // sqlite requires explicit check!
@@ -7,4 +9,17 @@ import { AbstractTask } from "./AbstractTask";
 export class Task extends AbstractTask {
   @Column("int")
   duration: number;
+
+  @ManyToOne(
+    type => Categories,
+    category => category.tasks
+  )
+  category: Categories;
+
+  @ManyToOne(
+    type => User,
+    user => user.tasks,
+    { nullable: false, onDelete: "CASCADE" , onUpdate: "RESTRICT" }
+  )
+  user: User;
 }

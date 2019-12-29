@@ -10,7 +10,11 @@ export interface WithId {
   userId: number;
 }
 
-export class GenericController<Model, PostI extends WithId, PatchI extends WithId> {
+export class GenericController<
+  Model,
+  PostI extends WithId,
+  PatchI extends WithId
+> {
   constructor(private _model: Constructable<Model>) {}
 
   async create(fields: PostI): Promise<Model> {
@@ -44,7 +48,7 @@ export class GenericController<Model, PostI extends WithId, PatchI extends WithI
     const repo = getRepository(this._model);
     const item = await this.get(userId, id);
     Object.assign(item, fields);
-    const saved =  await repo.save(item);
+    const saved = await repo.save(item);
     return saved;
   }
 }
