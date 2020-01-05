@@ -1,17 +1,18 @@
+require("dotenv").config();
+
 import bodyParser from "body-parser";
 import express, { ErrorRequestHandler } from "express";
 import * as path from "path";
 import "reflect-metadata";
 import { ConnectionOptions, createConnection } from "typeorm";
-import taskRouter from "./router/tasks";
-import faveTaskRouter from "./router/faveTask";
-import catRouter from "./router/categories";
-import useRouter from "./router/users";
-
-import { User } from "./entity/User";
 import { Categories } from "./entity/Categories";
-import { Task } from "./entity/Task";
 import { FaveTask } from "./entity/FaveTask";
+import { Task } from "./entity/Task";
+import { User } from "./entity/User";
+import catRouter from "./router/categories";
+import faveTaskRouter from "./router/faveTask";
+import taskRouter from "./router/tasks";
+import useRouter from "./router/users";
 
 const root: string = path.resolve(__dirname, "..");
 const app = express();

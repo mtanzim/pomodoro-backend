@@ -1,5 +1,6 @@
 import { getRepository } from "typeorm";
 import { User } from "../entity/User";
+import * as jwt from "jsonwebtoken";
 
 export interface IUserBody {
   username: string;
@@ -24,10 +25,20 @@ export class UserController {
   }: {
     username: string;
     password: string;
-  }): Promise<boolean> {
+  }): Promise<{auth:boolean, token?:string}> {
     const repo = getRepository(User);
     const user = await repo.findOneOrFail({ where: { username } });
-    return user.validatePassword(password);
+    const auth = await user.validatePassword(password);
+    if (auth) {
+      //sign JWT, valid for 1 hour
+      const token = jwt.sign(
+        { userId: user.id, username: user.username },
+        process.env.JWT_SECRET,
+        { expiresIn: "1h" }
+      );
+      return ({auth:true, token});
+    }
+    return ({auth:false})
   }
 
   async create(fields: IUserBody): Promise<User> {

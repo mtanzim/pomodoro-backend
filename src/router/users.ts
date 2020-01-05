@@ -19,11 +19,13 @@ router
   .post("/login", async function(req, res, next) {
     const { username, password }: IUserBody = req.body;
     try {
-      const loggedIn = await controller.login({ username, password });
-      return res.json(loggedIn);
+      const {auth, token} = await controller.login({ username, password });
+      console.log(auth);
+      if (auth) return res.json({token});
     } catch (err) {
       return next(err);
     }
+    return res.status(401).send("Unauthorized");
   })
   .post("/", async function(req, res, next) {
     const { ...fields }: IUserBody = req.body;
