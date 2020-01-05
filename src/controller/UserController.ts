@@ -1,6 +1,5 @@
 import { getRepository } from "typeorm";
 import { User } from "../entity/User";
-import bcrypt from "bcrypt";
 
 export interface IUserBody {
   username: string;
@@ -19,29 +18,23 @@ export interface IUserBodyPatch {
 export class UserController {
   constructor() {}
 
-  private async _handlePassword(
-    fields: IUserBody | IUserBodyPatch
-  ): Promise<string> {
-    const { password, verifyPassword } = fields;
-    if (password === undefined || verifyPassword === undefined)
-      throw new Error("Provide password!");
-    if (password !== verifyPassword) throw new Error("Passwords don't match");
-    const hashedPass = await bcrypt.hash(fields.password, 8);
-    return hashedPass;
-  }
-
-  async login({username,password}:{username:string, password:string}): Promise<boolean>{
+  async login({
+    username,
+    password
+  }: {
+    username: string;
+    password: string;
+  }): Promise<boolean> {
     const repo = getRepository(User);
     const user = await repo.findOneOrFail({ where: { username } });
-    const loggedIn = await bcrypt.compare(password,user.password);
-    return loggedIn;
+    return user.validatePassword(password);
   }
 
   async create(fields: IUserBody): Promise<User> {
-    fields.password = await this._handlePassword(fields);
     const repo = getRepository(User);
     let newItem: User = new User();
     Object.assign(newItem, fields);
+    await newItem.hashPassword();
     const saved = await repo.save(newItem);
     return saved;
   }
@@ -51,10 +44,10 @@ export class UserController {
     return user;
   }
   async update(id: number | string, fields: IUserBodyPatch): Promise<User> {
-    fields.password = await this._handlePassword(fields);
     const repo = getRepository(User);
     const item = await this.get(id);
     Object.assign(item, fields);
+    await item.hashPassword();
     const saved = await repo.save(item);
     return saved;
   }

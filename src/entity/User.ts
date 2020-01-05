@@ -1,14 +1,16 @@
+import bcrypt from "bcrypt";
+import { Length } from "class-validator";
 import {
   Column,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
-  Unique,
-  OneToMany
+  Unique
 } from "typeorm";
 import { AbstractTimetamp } from "./AbstractTimestamp";
-import { Task } from "./Task";
-import { FaveTask } from "./FaveTask";
 import { Categories } from "./Categories";
+import { FaveTask } from "./FaveTask";
+import { Task } from "./Task";
 
 @Entity()
 @Unique(["username"])
@@ -25,7 +27,8 @@ export class User extends AbstractTimetamp {
   @Column("varchar", { length: 500, nullable: true })
   email: string;
 
-  @Column("varchar", { length: 50000 })
+  @Column("varchar")
+  @Length(4, 500)
   password: string;
 
   @OneToMany(
@@ -43,4 +46,13 @@ export class User extends AbstractTimetamp {
     categories => categories.user
   )
   categories: Categories[];
+
+  async hashPassword() {
+    this.password = await bcrypt.hash(this.password, 8);
+  }
+
+  async validatePassword(password: string): Promise<boolean> {
+    const isValid = await bcrypt.compare(password, this.password);
+    return isValid;
+  }
 }
