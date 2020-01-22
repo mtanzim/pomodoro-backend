@@ -7,14 +7,9 @@ export interface Constructable<T> {
 
 export interface WithId {
   id: number;
-  userId: number;
 }
 
-export class GenericController<
-  Model,
-  PostI extends WithId,
-  PatchI extends WithId
-> {
+export class GenericController<Model, PostI, PatchI> {
   constructor(private _model: Constructable<Model>) {}
 
   async create(fields: PostI): Promise<Model> {

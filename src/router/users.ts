@@ -4,13 +4,19 @@ import {
   IUserBodyPatch,
   UserController
 } from "../controller/UserController";
+import { IAuthRequest } from "./IAuthRequest";
 
 const controller = new UserController();
 const router = express.Router();
 router
-  .get("/", async function(req, res, next) {
+  .get("/", async function(req: IAuthRequest, res, next) {
     try {
-      const { created, updated, password, ...visibleUser } = await controller.get(req?.user?.userId);
+      const {
+        created,
+        updated,
+        password,
+        ...visibleUser
+      } = await controller.get(req?.user?.userId);
       return res.json(visibleUser);
     } catch (err) {
       return next(err);
@@ -20,7 +26,6 @@ router
     const { username, password }: IUserBody = req.body;
     try {
       const { auth, token } = await controller.login({ username, password });
-      // console.log(auth);
       if (auth) return res.json({ token });
     } catch (err) {
       return next(err);
@@ -37,7 +42,7 @@ router
       return next(err);
     }
   })
-  .patch("/", async function(req, res, next) {
+  .patch("/", async function(req: IAuthRequest, res, next) {
     const {
       password,
       verifyPassword,
@@ -46,14 +51,19 @@ router
       ...rest
     }: IUserBodyPatch = req.body;
     try {
-      const newUser = await controller.update(req?.user?.userId, {
+      await controller.update(req?.user?.userId, {
         password,
         verifyPassword,
         name,
         email
       });
       const updatedUser = await controller.get(req?.user?.userId);
-      const { created, updated, password: hiddenPass, ...visibleUser } = updatedUser;
+      const {
+        created,
+        updated,
+        password: hiddenPass,
+        ...visibleUser
+      } = updatedUser;
       return res.json(visibleUser);
     } catch (err) {
       return next(err);
