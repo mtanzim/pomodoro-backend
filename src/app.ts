@@ -13,10 +13,16 @@ import catRouter from "./router/categories";
 import faveTaskRouter from "./router/faveTask";
 import taskRouter from "./router/tasks";
 import useRouter from "./router/users";
+import jwt from "express-jwt";
 
 const root: string = path.resolve(__dirname, "..");
 const app = express();
 app.use(bodyParser.json());
+app.use(
+  jwt({ secret: process.env.JWT_SECRET }).unless({
+    path: ["/api/users/auth/register", "/api/users/auth/login"]
+  })
+);
 
 const options: ConnectionOptions = {
   type: "sqlite",
