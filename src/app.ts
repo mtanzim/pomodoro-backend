@@ -30,7 +30,7 @@ const options: ConnectionOptions = {
   port: 3306,
   username: "root",
   database: "pomodoro-backend",
-  entities: [User, Categories, Task, FaveTask],
+  entities: [User, Categories, Task],
   logging: true,
   synchronize: true
 };

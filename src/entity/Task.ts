@@ -10,6 +10,9 @@ export class Task extends AbstractTask {
   @Column("int")
   duration: number;
 
+  @Column({ type: "boolean", default: 0 })
+  isFave: boolean;
+
   @ManyToOne(
     type => Categories,
     category => category.tasks
@@ -19,7 +22,7 @@ export class Task extends AbstractTask {
   @ManyToOne(
     type => User,
     user => user.tasks,
-    { nullable: false, onDelete: "CASCADE" , onUpdate: "RESTRICT" }
+    { nullable: false, onDelete: "CASCADE", onUpdate: "RESTRICT" }
   )
   user: User;
 }

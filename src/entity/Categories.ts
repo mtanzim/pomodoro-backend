@@ -1,16 +1,7 @@
-import {
-  Column,
-  Entity,
-  PrimaryGeneratedColumn,
-  CreateDateColumn,
-  UpdateDateColumn,
-  Unique,
-  OneToMany,
-  ManyToOne
-} from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, Unique, UpdateDateColumn } from "typeorm";
 import { AbstractTimetamp } from "./AbstractTimestamp";
-import { Task } from "./Task";
 import { FaveTask } from "./FaveTask";
+import { Task } from "./Task";
 import { User } from "./User";
 
 @Entity()
@@ -34,11 +25,11 @@ export class Categories extends AbstractTimetamp {
     task => task.category
   )
   tasks: Task[];
-  @OneToMany(
+/*   @OneToMany(
     type => FaveTask,
     faveTask => faveTask.category
   )
-  faveTasks: FaveTask[];
+  faveTasks: FaveTask[]; */
 
   @CreateDateColumn()
   created: Date;
