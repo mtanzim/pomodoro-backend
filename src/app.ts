@@ -15,7 +15,7 @@ import taskRouter from "./router/tasks";
 import useRouter from "./router/users";
 import jwt from "express-jwt";
 
-const root: string = path.resolve(__dirname, "..");
+// const root: string = path.resolve(__dirname, "..");
 const app = express();
 app.use(bodyParser.json());
 app.use(
@@ -25,8 +25,11 @@ app.use(
 );
 
 const options: ConnectionOptions = {
-  type: "sqlite",
-  database: `${root}/data/pomodoro.sqlite`,
+  type: "mysql",
+  host: "localhost",
+  port: 3306,
+  username: "root",
+  database: "pomodoro-backend",
   entities: [User, Categories, Task, FaveTask],
   logging: true,
   synchronize: true
