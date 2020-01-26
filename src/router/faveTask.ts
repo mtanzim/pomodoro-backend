@@ -1,13 +1,13 @@
 import express from "express";
 import { FaveTask } from "../entity/FaveTask";
-import { GenericController, WithId } from "../controller/GenericController";
+import { GenericController } from "../controller/GenericController";
 import { _makeGenericRouter } from "./_makeRouter";
 
-export interface ITaskBody extends WithId{
+export interface ITaskBody{
   name: string;
   categoryId: number;
 }
-interface ITaskBodyPatch extends WithId {
+interface ITaskBodyPatch {
   name?: string;
   categoryId?: number;
 }
@@ -16,7 +16,7 @@ const taskController = new GenericController<
   FaveTask,
   ITaskBody,
   ITaskBodyPatch
->(FaveTask);
+>(FaveTask, "fave_task");
 export default _makeGenericRouter<FaveTask, ITaskBody, ITaskBodyPatch>(
   taskController
 );

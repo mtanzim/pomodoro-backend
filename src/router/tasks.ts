@@ -1,20 +1,24 @@
 import { Task } from "../entity/Task";
-import { GenericController, WithId } from "../controller/GenericController";
+import { GenericController } from "../controller/GenericController";
 import { _makeGenericRouter } from "./_makeRouter";
 
-export interface ITaskBody extends WithId {
+export interface ITaskBody {
+  id: number;
+  userId: number;
   name: string;
   categoryId: number;
   duration: number;
 }
-interface ITaskBodyPatch extends WithId {
+interface ITaskBodyPatch {
+  id: number;
+  userId: number;
   name?: string;
   categoryId?: number;
   duration?: number;
 }
 
 const taskController = new GenericController<Task, ITaskBody, ITaskBodyPatch>(
-  Task
+  Task, "task"
 );
 
 export default _makeGenericRouter<Task, ITaskBody, ITaskBodyPatch>(taskController);

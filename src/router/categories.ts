@@ -1,12 +1,12 @@
-import { GenericController, WithId} from "../controller/GenericController";
+import { GenericController} from "../controller/GenericController";
 import { Categories } from "../entity/Categories";
 import { _makeGenericRouter } from "./_makeRouter";
 
-export interface ICatBody extends WithId {
+export interface ICatBody {
   // userId: number;
   name: string;
 }
-interface ICatBodyPatch extends WithId {
+interface ICatBodyPatch {
   name?: string;
 }
 
@@ -14,7 +14,7 @@ const catController = new GenericController<
   Categories,
   ICatBody,
   ICatBodyPatch
->(Categories);
+>(Categories, "categories");
 
 export default _makeGenericRouter<Categories, ICatBody, ICatBodyPatch>(
   catController

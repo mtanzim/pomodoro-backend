@@ -1,5 +1,5 @@
-import express, {Router} from "express";
-import { GenericController, WithId } from "../controller/GenericController";
+import express, { Router } from "express";
+import { GenericController } from "../controller/GenericController";
 import { IAuthRequest } from "./IAuthRequest";
 
 export function _makeGenericRouter<Model, IPostBody, IPatchBody>(
@@ -7,10 +7,9 @@ export function _makeGenericRouter<Model, IPostBody, IPatchBody>(
 ): Router {
   const router = express.Router();
   router
-    .post("/", async function(req:express.Request & {user:any}, res, next) {
-      const { ...fields }: IPostBody = req.body;
+    .post("/", async function(req: IAuthRequest, res, next) {
       try {
-        const newModel = await controller.create(fields);
+        const newModel = await controller.create(req?.user?.userId, req.body);
         return res.json(newModel);
       } catch (err) {
         return next(err);
@@ -26,7 +25,10 @@ export function _makeGenericRouter<Model, IPostBody, IPatchBody>(
     })
     .get("/:id", async function(req: IAuthRequest, res, next) {
       try {
-        const Model = await controller.get(req?.user?.userId, req.params.id);
+        const Model = await controller.get(
+          req?.user?.userId,
+          Number(req.params.id)
+        );
         return res.json(Model);
       } catch (err) {
         return next(err);
@@ -43,9 +45,7 @@ export function _makeGenericRouter<Model, IPostBody, IPatchBody>(
       }
     })
     .patch("/:id", async function(req: IAuthRequest, res, next) {
-      // cut out userId field
-      const { userId, ...rest } = req.body;
-      const fields: IPatchBody = rest;
+      const fields: IPatchBody = req.body;
       try {
         let Model = await controller.update(
           req?.user?.userId,
