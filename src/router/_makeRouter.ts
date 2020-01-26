@@ -1,5 +1,5 @@
 import express, {Router} from "express";
-import { GenericController } from "../controller/GenericController";
+import { GenericController, WithId } from "../controller/GenericController";
 import { IAuthRequest } from "./IAuthRequest";
 
 export function _makeGenericRouter<Model, IPostBody, IPatchBody>(
@@ -7,7 +7,7 @@ export function _makeGenericRouter<Model, IPostBody, IPatchBody>(
 ): Router {
   const router = express.Router();
   router
-    .post("/", async function(req, res, next) {
+    .post("/", async function(req:express.Request & {user:any}, res, next) {
       const { ...fields }: IPostBody = req.body;
       try {
         const newModel = await controller.create(fields);

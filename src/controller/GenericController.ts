@@ -1,4 +1,5 @@
-import { getRepository } from "typeorm";
+import { getRepository, getConnection } from "typeorm";
+import { User } from "../entity/User";
 
 // https://stackoverflow.com/questions/41017287/cannot-use-new-with-expression-typescript
 export interface Constructable<T> {
@@ -7,6 +8,7 @@ export interface Constructable<T> {
 
 export interface WithId {
   id: number;
+  userId: number;
 }
 
 export class GenericController<Model, PostI, PatchI> {
@@ -14,9 +16,12 @@ export class GenericController<Model, PostI, PatchI> {
 
   async create(fields: PostI): Promise<Model> {
     const repo = getRepository(this._model);
+    const userRepo = getRepository(User);
     let newItem: Model = new this._model();
     Object.assign(newItem, fields);
-    const saved = await repo.save(newItem);
+    newItem.user = await userRepo.findOneOrFail(fields.userId);
+    // const saved = await repo.save(newItem);
+    const saved = await getConnection().manager.save(newItem);
     return saved;
   }
   async getAll(userId: number | string): Promise<Model[]> {
