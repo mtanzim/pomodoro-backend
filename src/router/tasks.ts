@@ -4,17 +4,17 @@ import { _makeGenericRouter } from "./_makeRouter";
 
 export interface ITaskBody {
   id: number;
-  userId: number;
   name: string;
   categoryId: number;
   duration: number;
+  isFave?: boolean;
 }
 interface ITaskBodyPatch {
   id: number;
-  userId: number;
   name?: string;
   categoryId?: number;
   duration?: number;
+  isFave?: boolean;
 }
 
 const taskController = new GenericController<Task, ITaskBody, ITaskBodyPatch>(
