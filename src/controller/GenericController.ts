@@ -7,20 +7,24 @@ export interface Constructable<T> {
   new (): T;
 }
 
-export interface IWithUser {
+export interface IWithRelations {
   id: number | string;
   user: User;
+  category?: Categories;
 }
 
 export class GenericController<Model> {
   constructor(
-    protected _model: Constructable<Model>,
+    protected _model: Constructable<Model & IWithRelations>,
     protected _modelAlias: string
   ) {}
 
-  async create<PostI>(userId: number | string, fields: PostI): Promise<Model> {
+  async create<PostI>(
+    userId: number | string,
+    fields: PostI
+  ): Promise<Model & IWithRelations> {
     const userRepo = getRepository(User);
-    let newItem: Model = new this._model();
+    let newItem = new this._model();
     Object.assign(newItem, fields);
     newItem.user = await userRepo.findOneOrFail(userId);
     await getConnection().manager.save(newItem);
@@ -36,7 +40,10 @@ export class GenericController<Model> {
       .getMany();
     return items;
   }
-  async get(userId: number | string, id: number | string): Promise<Model> {
+  async get(
+    userId: number | string,
+    id: number | string
+  ): Promise<Model & IWithRelations> {
     const repo = await getRepository(this._model);
 
     let items = await repo
@@ -57,7 +64,7 @@ export class GenericController<Model> {
     userId: number | string,
     id: number | string,
     fields: PatchI
-  ): Promise<Model> {
+  ): Promise<Model & IWithRelations> {
     const repo = getRepository(this._model);
     const item = await this.get(userId, id);
     Object.assign(item, fields);
@@ -65,4 +72,3 @@ export class GenericController<Model> {
     return await this.get(userId, id);
   }
 }
-

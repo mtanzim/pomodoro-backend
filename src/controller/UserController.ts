@@ -25,7 +25,7 @@ export class UserController {
   }: {
     username: string;
     password: string;
-  }): Promise<{auth:boolean, token?:string}> {
+  }): Promise<{ auth: boolean; token?: string }> {
     const repo = getRepository(User);
     const user = await repo.findOneOrFail({ where: { username } });
     const auth = await user.validatePassword(password);
@@ -36,9 +36,9 @@ export class UserController {
         process.env.JWT_SECRET,
         { expiresIn: "1h" }
       );
-      return ({auth:true, token});
+      return { auth: true, token };
     }
-    return ({auth:false})
+    return { auth: false };
   }
 
   async create(fields: IUserBody): Promise<User> {

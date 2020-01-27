@@ -1,29 +1,29 @@
 import { getConnection, getRepository } from "typeorm";
 import { Categories } from "../entity/Categories";
 import { User } from "../entity/User";
-import { Constructable } from "./GenericController";
-import { GenericController } from "./GenericController";
+import {
+  GenericController,
+  IWithRelations,
+  Constructable
+} from "./GenericController";
 
 interface IWithCategoryId {
   categoryId?: number | string;
 }
 
-interface ITaskWithCategory {
-  category?: Categories;
-}
-
-export class TaskController<
-  Model
-> extends GenericController<Model> {
-  constructor(_model: Constructable<Model>, _modelAlias: string) {
+export class TaskController<Model> extends GenericController<Model> {
+  constructor(
+    _model: Constructable<Model & IWithRelations>,
+    _modelAlias: string
+  ) {
     super(_model, _modelAlias);
   }
   async create<PostI>(
     userId: number | string,
     fields: PostI & IWithCategoryId
-  ): Promise<Model> {
+  ): Promise<Model & IWithRelations> {
     const userRepo = getRepository(User);
-    let newItem: Model = new this._model();
+    let newItem = new this._model();
     Object.assign(newItem, fields);
     newItem.user = await userRepo.findOneOrFail(userId);
     const categoryRepo = getRepository(Categories);
@@ -43,7 +43,10 @@ export class TaskController<
       .getMany();
     return items;
   }
-  async get(userId: number | string, id: number | string): Promise<Model> {
+  async get(
+    userId: number | string,
+    id: number | string
+  ): Promise<Model & IWithRelations> {
     const repo = await getRepository(this._model);
     const items = repo
       .createQueryBuilder(this._modelAlias)
