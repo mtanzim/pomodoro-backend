@@ -4,18 +4,24 @@ import { User } from "../entity/User";
 import { Constructable } from "./GenericController";
 import { GenericController } from "./GenericController";
 
-export class TaskController<Model, PostI, PatchI> extends GenericController<
-  Model,
-  PostI,
-  PatchI
-> {
-  constructor(
-    _model: Constructable<Model>,
-    _modelAlias: string
-  ) {
+interface IWithCategoryId {
+  categoryId?: number | string;
+}
+
+interface ITaskWithCategory {
+  category?: Categories;
+}
+
+export class TaskController<
+  Model
+> extends GenericController<Model> {
+  constructor(_model: Constructable<Model>, _modelAlias: string) {
     super(_model, _modelAlias);
   }
-  async create(userId: number | string, fields: PostI): Promise<Model> {
+  async create<PostI>(
+    userId: number | string,
+    fields: PostI & IWithCategoryId
+  ): Promise<Model> {
     const userRepo = getRepository(User);
     let newItem: Model = new this._model();
     Object.assign(newItem, fields);

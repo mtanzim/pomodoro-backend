@@ -3,9 +3,9 @@ import { FaveTask } from "../entity/FaveTask";
 import { TaskController } from "../controller/TaskController";
 import { _makeGenericRouter } from "./_makeRouter";
 
-export interface ITaskBody{
+interface ITaskBodyPost {
   name: string;
-  categoryId: number;
+  categoryId?: number;
 }
 interface ITaskBodyPatch {
   name?: string;
@@ -13,10 +13,8 @@ interface ITaskBodyPatch {
 }
 
 const taskController = new TaskController<
-  FaveTask,
-  ITaskBody,
-  ITaskBodyPatch
+  FaveTask
 >(FaveTask, "fave_task");
-export default _makeGenericRouter<FaveTask, ITaskBody, ITaskBodyPatch>(
+export default _makeGenericRouter<FaveTask, ITaskBodyPost, ITaskBodyPatch>(
   taskController
 );

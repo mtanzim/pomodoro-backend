@@ -2,26 +2,19 @@ import { Task } from "../entity/Task";
 import { TaskController } from "../controller/TaskController";
 import { _makeGenericRouter } from "./_makeRouter";
 
-export interface ITaskBody {
-  id: number;
+type ITaskBodyPost = {
   name: string;
-  categoryId: number;
+  categoryId?: number;
   duration: number;
-  isFave?: boolean;
-}
-interface ITaskBodyPatch {
-  id: number;
+};
+type ITaskBodyPatch = {
   name?: string;
   categoryId?: number;
   duration?: number;
-  isFave?: boolean;
-}
+};
 
-const taskController = new TaskController<Task, ITaskBody, ITaskBodyPatch>(
-  Task,
-  "task"
-);
+const taskController = new TaskController<Task>(Task, "task");
 
-export default _makeGenericRouter<Task, ITaskBody, ITaskBodyPatch>(
+export default _makeGenericRouter<Task, ITaskBodyPost, ITaskBodyPatch>(
   taskController
 );

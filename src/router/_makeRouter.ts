@@ -1,15 +1,19 @@
 import express, { Router } from "express";
 import { GenericController } from "../controller/GenericController";
 import { IAuthRequest } from "./IAuthRequest";
+import { User } from "../entity/User";
 
 export function _makeGenericRouter<Model, IPostBody, IPatchBody>(
-  controller: GenericController<Model, IPostBody, IPatchBody>
+  controller: GenericController<Model>
 ): Router {
   const router = express.Router();
   router
     .post("/", async function(req: IAuthRequest, res, next) {
       try {
-        const newModel = await controller.create(req?.user?.userId, req.body);
+        const newModel = await controller.create<IPostBody>(
+          req?.user?.userId,
+          req.body
+        );
         return res.json(newModel);
       } catch (err) {
         return next(err);
@@ -47,7 +51,7 @@ export function _makeGenericRouter<Model, IPostBody, IPatchBody>(
     .patch("/:id", async function(req: IAuthRequest, res, next) {
       const fields: IPatchBody = req.body;
       try {
-        let Model = await controller.update(
+        let Model = await controller.update<IPatchBody>(
           req?.user?.userId,
           req.params.id,
           fields

@@ -7,15 +7,18 @@ export interface Constructable<T> {
   new (): T;
 }
 
-// TODO: add relations with categories
-// TODO: ensure proper distinction b/w categories and tasks: move category controller to separate module
-export class GenericController<Model, PostI, PatchI> {
+export interface IWithUser {
+  id: number | string;
+  user: User;
+}
+
+export class GenericController<Model> {
   constructor(
     protected _model: Constructable<Model>,
     protected _modelAlias: string
   ) {}
 
-  async create(userId: number | string, fields: PostI): Promise<Model> {
+  async create<PostI>(userId: number | string, fields: PostI): Promise<Model> {
     const userRepo = getRepository(User);
     let newItem: Model = new this._model();
     Object.assign(newItem, fields);
@@ -50,7 +53,7 @@ export class GenericController<Model, PostI, PatchI> {
     await repo.remove(item);
     return;
   }
-  async update(
+  async update<PatchI>(
     userId: number | string,
     id: number | string,
     fields: PatchI
