@@ -1,14 +1,13 @@
 {
     "sqltools.connections": [
         {
-            "database": "${workspaceFolder}/data/pomodoro.sqlite",
-            "dialect": "SQLite",
-            "name": "pomodoro"
-        },
-        {
-            "database": "\\\\wsl$\\Ubuntu-18.04\\root\\Documents\\softEng\\pomodoro-backend\\data\\pomodoro.sqlite",
-            "dialect": "SQLite",
-            "name": "pomodoro-db"
+            "askForPassword": true,
+            "database": "pomodoro-backend",
+            "dialect": "MySQL",
+            "name": "local",
+            "port": 3306,
+            "server": "localhost",
+            "username": "root"
         }
     ],
     "sqltools.useNodeRuntime": true

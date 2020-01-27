@@ -25,11 +25,11 @@ export class Categories extends AbstractTimetamp {
     task => task.category
   )
   tasks: Task[];
-/*   @OneToMany(
+  @OneToMany(
     type => FaveTask,
     faveTask => faveTask.category
   )
-  faveTasks: FaveTask[]; */
+  faveTasks: FaveTask[];
 
   @CreateDateColumn()
   created: Date;

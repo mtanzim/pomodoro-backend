@@ -4,14 +4,9 @@ import { Categories } from "./Categories";
 import { User } from "./User";
 
 @Entity()
-// sqlite requires explicit check!
-@Check(`typeof(duration) = "integer"`)
 export class Task extends AbstractTask {
   @Column("int")
   duration: number;
-
-  @Column({ type: "boolean", default: 0 })
-  isFave: boolean;
 
   @ManyToOne(
     type => Categories,

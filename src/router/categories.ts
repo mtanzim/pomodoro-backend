@@ -3,7 +3,6 @@ import { Categories } from "../entity/Categories";
 import { _makeGenericRouter } from "./_makeRouter";
 
 export interface ICatBody {
-  // userId: number;
   name: string;
 }
 interface ICatBodyPatch {

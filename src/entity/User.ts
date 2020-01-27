@@ -36,11 +36,11 @@ export class User extends AbstractTimetamp {
     task => task.user
   )
   tasks: Task[];
-/*   @OneToMany(
+  @OneToMany(
     type => FaveTask,
     faveTask => faveTask.user
   )
-  faveTasks: FaveTask[]; */
+  faveTasks: FaveTask[];
   @OneToMany(
     type => Categories,
     categories => categories.user

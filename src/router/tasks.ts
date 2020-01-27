@@ -1,5 +1,5 @@
 import { Task } from "../entity/Task";
-import { GenericController } from "../controller/GenericController";
+import { TaskController } from "../controller/TaskController";
 import { _makeGenericRouter } from "./_makeRouter";
 
 export interface ITaskBody {
@@ -17,8 +17,11 @@ interface ITaskBodyPatch {
   isFave?: boolean;
 }
 
-const taskController = new GenericController<Task, ITaskBody, ITaskBodyPatch>(
-  Task, "task"
+const taskController = new TaskController<Task, ITaskBody, ITaskBodyPatch>(
+  Task,
+  "task"
 );
 
-export default _makeGenericRouter<Task, ITaskBody, ITaskBodyPatch>(taskController);
+export default _makeGenericRouter<Task, ITaskBody, ITaskBodyPatch>(
+  taskController
+);
