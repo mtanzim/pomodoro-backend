@@ -2,7 +2,6 @@ require("dotenv").config();
 
 import bodyParser from "body-parser";
 import express, { ErrorRequestHandler } from "express";
-import * as path from "path";
 import "reflect-metadata";
 import { ConnectionOptions, createConnection } from "typeorm";
 import { Categories } from "./entity/Categories";
@@ -14,9 +13,10 @@ import faveTaskRouter from "./router/faveTask";
 import taskRouter from "./router/tasks";
 import useRouter from "./router/users";
 import jwt from "express-jwt";
+import cors from "cors";
 
-// const root: string = path.resolve(__dirname, "..");
 const app = express();
+app.use(cors());
 app.use(bodyParser.json());
 app.use(
   jwt({ secret: process.env.JWT_SECRET }).unless({
@@ -37,7 +37,7 @@ const options: ConnectionOptions = {
 
 const handleError: ErrorRequestHandler = (err, _req, res, _next) => {
   console.log(err);
-  return res.status(500).send(err.message);
+  return res.status(500).json(err.message);
 };
 
 createConnection(options)

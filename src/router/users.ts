@@ -35,9 +35,12 @@ router
   .post("/auth/register", async function(req, res, next) {
     const { ...fields }: IUserBody = req.body;
     try {
+      if (fields.password !== fields.verifyPassword) {
+        throw new Error("Passwords do not match");
+      }
       const newUser = await controller.create(fields);
-      const { id, username } = newUser;
-      return res.json({ id, username });
+      const { username } = newUser;
+      return res.json({ username });
     } catch (err) {
       return next(err);
     }
