@@ -5,6 +5,7 @@ import {
   UserController
 } from "../controller/UserController";
 import { IAuthRequest } from "./IAuthRequest";
+import { validate } from "class-validator";
 
 const controller = new UserController();
 const router = express.Router();
@@ -30,7 +31,7 @@ router
     } catch (err) {
       return next(err);
     }
-    return res.status(401).send("Unauthorized");
+    return res.status(401).json("Unauthorized");
   })
   .post("/auth/register", async function(req, res, next) {
     const { ...fields }: IUserBody = req.body;
@@ -38,7 +39,12 @@ router
       if (fields.password !== fields.verifyPassword) {
         throw new Error("Passwords do not match");
       }
+
       const newUser = await controller.create(fields);
+      const errors = await validate(newUser);
+      if (errors.length > 0) {
+        throw new Error("Validation failed.");
+      }
       const { username } = newUser;
       return res.json({ username });
     } catch (err) {

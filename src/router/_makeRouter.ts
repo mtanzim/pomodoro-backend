@@ -1,7 +1,6 @@
 import express, { Router } from "express";
 import { GenericController } from "../controller/GenericController";
 import { IAuthRequest } from "./IAuthRequest";
-import { User } from "../entity/User";
 
 export function _makeGenericRouter<Model, IPostBody, IPatchBody>(
   controller: GenericController<Model>

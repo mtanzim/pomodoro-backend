@@ -31,7 +31,7 @@ export class GenericController<Model> {
     return await this.get(userId, newItem.id);
   }
   async getAll(userId: number | string): Promise<Model[]> {
-    const repo = await getRepository(this._model);
+    const repo = getRepository(this._model);
 
     let items = await repo
       .createQueryBuilder(this._modelAlias)

@@ -31,7 +31,7 @@ export class TaskController<Model> extends GenericController<Model> {
       newItem.category = await categoryRepo.findOneOrFail(fields.categoryId);
     }
     await getConnection().manager.save(newItem);
-    return await this.get(userId, newItem.id);
+    return this.get(userId, newItem.id);
   }
   async getAll(userId: number | string): Promise<Model[]> {
     const repo = await getRepository(this._model);
