@@ -5,7 +5,6 @@ import {
   UserController
 } from "../controller/UserController";
 import { IAuthRequest } from "./IAuthRequest";
-import { validate } from "class-validator";
 
 const controller = new UserController();
 const router = express.Router();
@@ -41,10 +40,6 @@ router
       }
 
       const newUser = await controller.create(fields);
-      const errors = await validate(newUser);
-      if (errors.length > 0) {
-        throw new Error("Validation failed.");
-      }
       const { username } = newUser;
       return res.json({ username });
     } catch (err) {

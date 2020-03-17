@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import { Length, IsEmail } from "class-validator";
+import { Length, IsEmail, IsOptional } from "class-validator";
 import {
   Column,
   Entity,
@@ -19,18 +19,19 @@ export class User extends AbstractTimetamp {
   id: number;
 
   @Column("varchar", { length: 500 })
-  @Length(4, 50)
+  @Length(4, 50, { message: "Username length invalid." })
   username: string;
 
   @Column("varchar", { length: 500, nullable: true })
-  name: string;
+  name?: string;
 
   @Column("varchar", { length: 500, nullable: true })
+  @IsOptional()
   @IsEmail()
-  email: string;
+  email?: string;
 
   @Column("varchar")
-  @Length(4, 500)
+  @Length(4, 500, { message: "Password length invalid." })
   password: string;
 
   @OneToMany(

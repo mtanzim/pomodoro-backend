@@ -1,6 +1,7 @@
 import { getRepository } from "typeorm";
 import { User } from "../entity/User";
 import * as jwt from "jsonwebtoken";
+import { validate } from "class-validator";
 
 export interface IUserBody {
   username: string;
@@ -46,6 +47,10 @@ export class UserController {
     let newItem: User = new User();
     Object.assign(newItem, fields);
     await newItem.hashPassword();
+    const errors = await validate(newItem);
+    if (errors.length > 0) {
+      throw new Error("Validation failed.");
+    }
     const saved = await repo.save(newItem);
     return saved;
   }
