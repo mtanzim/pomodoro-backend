@@ -7,7 +7,8 @@ import { User } from "./User";
 export class FaveTask extends AbstractTask {
   @ManyToOne(
     type => Categories,
-    category => category.faveTasks
+    category => category.faveTasks,
+    { nullable: true, onDelete: "CASCADE", onUpdate: "RESTRICT" }
   )
   category: Categories;
 

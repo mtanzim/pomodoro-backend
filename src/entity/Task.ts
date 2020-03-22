@@ -10,7 +10,8 @@ export class Task extends AbstractTask {
 
   @ManyToOne(
     type => Categories,
-    category => category.tasks
+    category => category.tasks,
+    { nullable: true, onDelete: "CASCADE", onUpdate: "RESTRICT" }
   )
   category: Categories;
 
