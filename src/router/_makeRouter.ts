@@ -40,9 +40,7 @@ export function _makeGenericRouter<Model, IPostBody, IPatchBody>(
     .delete("/:id", async function(req: IAuthRequest, res, next) {
       try {
         await controller.delete(req?.user?.userId, req.params.id);
-        return res.send(
-          `Deleted Model:${req.params.id} for User: ${req?.user?.userId}`
-        );
+        return res.status(200).send();
       } catch (err) {
         return next(err);
       }
