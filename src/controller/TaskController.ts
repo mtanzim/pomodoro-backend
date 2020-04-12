@@ -1,11 +1,13 @@
-import { getConnection, getRepository } from "typeorm";
+import { getConnection, getRepository, MoreThanOrEqual } from "typeorm";
 import { Categories } from "../entity/Categories";
 import { User } from "../entity/User";
 import {
   GenericController,
   IWithRelations,
-  Constructable
+  Constructable,
 } from "./GenericController";
+import { Task } from "../entity/Task";
+import { FaveTask } from "../entity/FaveTask";
 
 interface IWithCategoryId {
   categoryId?: number | string;
@@ -40,6 +42,23 @@ export class TaskController<Model> extends GenericController<Model> {
       .innerJoin(`${this._modelAlias}.user`, "user")
       .leftJoinAndSelect(`${this._modelAlias}.category`, "categories")
       .where("user.id = :userId", { userId })
+      .getMany();
+    return items;
+  }
+
+  async getTodayTasks(userId: number | string): Promise<Task[]> {
+    if (this._model instanceof FaveTask) {
+      throw new Error("Cannot use this method with FaveTask");
+    }
+    const repo = await getRepository(Task);
+    let items = await repo
+      .createQueryBuilder(this._modelAlias)
+      .innerJoin(`${this._modelAlias}.user`, "user")
+      .leftJoinAndSelect(`${this._modelAlias}.category`, "categories")
+      .where("user.id = :userId", { userId })
+      .andWhere("task.created >= curdate()")
+      .take(50)
+      .orderBy("task.created", "DESC")
       .getMany();
     return items;
   }
